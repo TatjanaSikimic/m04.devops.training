@@ -1,0 +1,29 @@
+version: v1.0
+name: "\U0001F3AF Simple CI Pipeline"
+agent:
+  machine:
+    type: f1-standard-2
+    os_image: ubuntu2404
+fail_fast:
+  stop:
+    when: branch != 'main'
+auto_cancel:
+  running:
+    when: branch != 'main'
+  queued:
+    when: branch = 'main'
+blocks:
+  - name: Make Docker image
+    dependencies: []
+    task:
+      jobs:
+        - name: "\U0001F7E2 Run Tests"
+          commands:
+            - checkout
+            - cd 2-docker-build
+            - docker build -t myapp .
+            - 'docker tag myapp statjana/myapp:semaphore2'
+            - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+            - 'docker push statjana/myapp:semaphore2'
+      secrets:
+        - name: DOCKER_TATJANA
