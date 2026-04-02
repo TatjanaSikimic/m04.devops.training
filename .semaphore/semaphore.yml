@@ -13,11 +13,11 @@ auto_cancel:
   queued:
     when: branch = 'main'
 blocks:
-  - name: Make Docker image
+  - name: Docker Build
     dependencies: []
     task:
       jobs:
-        - name: "\U0001F7E2 Run Tests"
+        - name: Docker build
           commands:
             - checkout
             - cd 2-docker-build
