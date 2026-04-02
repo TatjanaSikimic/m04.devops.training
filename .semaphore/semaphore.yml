@@ -21,9 +21,12 @@ blocks:
           commands:
             - checkout
             - cd 2-docker-build
-            - docker build -t myapp .
-            - 'docker tag myapp statjana/myapp:semaphore2'
             - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-            - 'docker push statjana/myapp:semaphore2'
+            - 'docker pull statjana/myapp:latest'
+            - 'docker build --cache-from statjana/myapp:latest -t statjana/myapp:$SEMAPHORE_WORKFLOW_ID .'
+            - 'docker tag statjana/myapp:$SEMAPHORE_WORKFLOW_ID statjana/myapp:latest'
+            - '#docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
+            - 'docker push statjana/myapp:$SEMAPHORE_WORKFLOW_ID'
+            - 'docker push statjana/myapp:latest'
       secrets:
         - name: DOCKER_TATJANA
